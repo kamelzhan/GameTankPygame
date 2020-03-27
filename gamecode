@@ -1,0 +1,73 @@
+import pygame
+import random
+
+pygame.init()
+
+screen=pygame.display.set_mode((800,600))
+playerx=400
+playery=500
+bullx=900
+bully=-100
+done = False
+im4=pygame.image.load("dead.jpg")
+im3=pygame.image.load("bull1.png")
+back=pygame.image.load("background.jpg")
+im=pygame.image.load("player.png")
+im2=pygame.image.load("enemy.png")
+enemyx= random.randint(0,736)
+enemyy= random.randint(20,50)
+movex=1
+movey=30
+bull=2
+score=0
+d1=1000
+d2=1000
+font = pygame.font.Font(None,40)
+text = font.render(str("Очки: "), True, (255,0,0))
+text2 = font.render(str(score), True, (255,0,0))
+
+def player(playerx,playery):
+  screen.blit(im, (playerx,playery))
+def enemy(x,y):
+  screen.blit(im2,(x,y))
+while not done:
+  screen.blit(back, (0, 0))
+  screen.blit(im3,(bullx,bully))
+ 
+  
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+      done = True
+    if event.type==pygame.KEYDOWN and event.key==pygame.K_SPACE:
+      if bully<=0: 
+        bullx=playerx+25
+        bully=playery-15
+      if bully>=enemyy-10 and bully<=enemyy+60 and bullx>=enemyx-10 and bullx<=enemyx+60:
+        bullx=playerx+25
+        bully=playery-15
+  if bully>=enemyy-10 and bully<=enemyy+60 and bullx>=enemyx-10 and bullx<=enemyx+60:
+    score+=1
+    text2 = font.render(str(score), True, (255,0,0))
+    enemyx= random.randint(0,736)
+    enemyy= random.randint(20,50)
+  if playery>=enemyy-60 and playery<=enemyy+60 and playerx>=enemyx-60 and playerx<=enemyx+60:
+    d1=-180
+    d2=-100
+  if event.type==pygame.KEYDOWN:
+    if event.key==pygame.K_RIGHT:
+        playerx +=1
+    if event.key==pygame.K_LEFT:
+        playerx -=1
+
+
+  enemyx+= movex
+  if enemyx<0 or enemyx>736:
+    movex= -movex
+    enemyy+= movey
+  bully-=bull
+  enemy(enemyx, enemyy)
+  player(playerx,playery)
+  screen.blit(text, (650,20))
+  screen.blit(text2, (750,20))
+  screen.blit(im4,(d1,d2))
+  pygame.display.flip()
